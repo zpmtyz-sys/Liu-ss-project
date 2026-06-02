@@ -1,0 +1,69 @@
+# ============================================
+# 车载智能维保Agent配置文件
+# ============================================
+
+# Ollama模型服务配置
+ollama:
+  base_url: "http://localhost:11434"
+  model: "hermes3:8b-q4_K_M"
+  # 备选模型（按优先级排列）
+  fallback_models:
+    - "hermes3:8b-q4_K_S"
+    - "qwen2:7b-q4_K_M"
+  # 推理参数
+  options:
+    temperature: 0.3          # 低温度保证诊断输出稳定性
+    top_p: 0.9
+    num_predict: 1024         # 最大生成token数
+    num_ctx: 4096             # 上下文窗口大小
+    repeat_penalty: 1.1       # 重复惩罚
+    stop:                     # 停止词
+      - "</tool_call>"
+      - "\nHuman:"
+
+# Agent配置
+agent:
+  max_tool_calls: 5           # 单次对话最大工具调用次数
+  timeout: 30                 # 工具调用超时（秒）
+  retry_count: 2              # 工具调用失败重试次数
+  # 对话历史管理
+  history:
+    max_turns: 20             # 最大对话轮次
+    summary_threshold: 15     # 超过此轮次进行历史摘要压缩
+
+# 工具配置
+tools:
+  obd_lookup:
+    enabled: true
+    database_path: "./data/obd_codes.json"
+    # 支持的协议
+    protocols:
+      - "OBD-II"
+      - "CAN"
+      - "ISO-9141"
+
+  manual_search:
+    enabled: true
+    # RAG检索参数
+    top_k: 5                  # 返回最相关的5条结果
+    similarity_threshold: 0.7 # 相似度阈值
+    chunk_size: 512           # 文本分块大小
+    chunk_overlap: 50         # 分块重叠
+
+  fault_reasoning:
+    enabled: true
+    # 推理引擎参数
+    max_depth: 3              # 最大推理深度
+    confidence_threshold: 0.6 # 置信度阈值
+
+# 日志配置
+logging:
+  level: "INFO"               # DEBUG/INFO/WARNING/ERROR
+  file: "./logs/agent.log"
+  format: "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+
+# 车辆信息（可通过OBD自动获取）
+vehicle:
+  vin: ""                     # 车辆VIN码（留空则手动输入或OBD读取）
+  default_brand: "通用"       # 默认品牌
+  default_year: 2020          # 默认年份

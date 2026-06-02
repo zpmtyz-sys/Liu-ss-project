@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>刘思思 - 作品集</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+            background: #0f0f23;
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+        .container { max-width: 1100px; margin: 0 auto; padding: 60px 20px; }
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #4fc3f7, #7c4dff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+        }
+        .subtitle { text-align: center; color: #90a4ae; margin-bottom: 60px; font-size: 1.1rem; }
+        .portfolio-item {
+            margin-bottom: 60px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: border-color 0.3s;
+        }
+        .portfolio-item:hover { border-color: rgba(79,195,247,0.3); }
+        .mockup-container {
+            background: #1a1a2e;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            padding: 20px;
+        }
+        /* Window chrome */
+        .window-chrome {
+            background: #252540;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .window-titlebar {
+            display: flex;
+            align-items: center;
+            padding: 10px 16px;
+            background: #1e1e36;
+            gap: 8px;
+        }
+        .window-dot {
+            width: 12px; height: 12px;
+            border-radius: 50%;
+        }
+        .window-dot.red { background: #ff5f57; }
+        .window-dot.yellow { background: #febc2e; }
+        .window-dot.green { background: #28c840; }
+        .window-title { margin-left: 12px; font-size: 0.8rem; color: #90a4ae; }
+        .window-content { padding: 24px; min-height: 280px; }
+        /* Terminal mockup */
+        .terminal-content {
+            font-family: "JetBrains Mono", "Fira Code", monospace;
+            font-size: 0.85rem;
+            line-height: 1.8;
+            color: #a0e0a0;
+        }
+        .terminal-content .prompt { color: #4fc3f7; }
+        .terminal-content .output { color: #b0bec5; }
+        .terminal-content .success { color: #81c784; }
+        .terminal-content .warning { color: #ffd54f; }
+        .terminal-content .info { color: #90a4ae; }
+        /* Dashboard mockup */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 0;
+            min-height: 280px;
+        }
+        .dash-sidebar {
+            background: rgba(0,0,0,0.3);
+            padding: 20px 16px;
+            border-right: 1px solid rgba(255,255,255,0.06);
+        }
+        .dash-sidebar-item {
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: #90a4ae;
+            margin-bottom: 4px;
+            cursor: default;
+        }
+        .dash-sidebar-item.active {
+            background: rgba(79,195,247,0.1);
+            color: #4fc3f7;
+        }
+        .dash-main { padding: 20px; }
+        .dash-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .dash-header h3 { color: #fff; font-size: 1rem; }
+        .dash-btn {
+            padding: 6px 16px;
+            background: linear-gradient(135deg, #4fc3f7, #7c4dff);
+            border-radius: 6px;
+            font-size: 0.75rem;
+            color: #fff;
+        }
+        .dash-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .dash-stat {
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+        .dash-stat .num { font-size: 1.4rem; color: #4fc3f7; font-weight: 700; }
+        .dash-stat .label { font-size: 0.7rem; color: #90a4ae; }
+        .dash-table { width: 100%; font-size: 0.75rem; }
+        .dash-table th { text-align: left; color: #90a4ae; padding: 6px 8px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .dash-table td { padding: 6px 8px; color: #b0bec5; border-bottom: 1px solid rgba(255,255,255,0.03); }
+        .status-badge {
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+        }
+        .status-badge.online { background: rgba(76,175,80,0.15); color: #81c784; }
+        .status-badge.offline { background: rgba(244,67,54,0.15); color: #ef5350; }
+        /* Chat mockup */
+        .chat-interface { display: flex; flex-direction: column; min-height: 280px; }
+        .chat-messages { flex: 1; padding: 16px; overflow-y: auto; }
+        .chat-msg {
+            margin-bottom: 16px;
+            display: flex;
+            gap: 10px;
+        }
+        .chat-msg.user { flex-direction: row-reverse; }
+        .chat-avatar {
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+        .chat-avatar.ai { background: rgba(79,195,247,0.2); color: #4fc3f7; }
+        .chat-avatar.human { background: rgba(124,77,255,0.2); color: #b39ddb; }
+        .chat-bubble {
+            max-width: 70%;
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+        .chat-msg.user .chat-bubble { background: rgba(124,77,255,0.1); color: #e0e0e0; border-bottom-right-radius: 4px; }
+        .chat-msg.bot .chat-bubble { background: rgba(79,195,247,0.08); color: #e0e0e0; border-bottom-left-radius: 4px; }
+        .chat-input-area {
+            display: flex;
+            gap: 10px;
+            padding: 12px 16px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+        }
+        .chat-input {
+            flex: 1;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 8px 14px;
+            color: #90a4ae;
+            font-size: 0.85rem;
+        }
+        .chat-send {
+            padding: 8px 20px;
+            background: linear-gradient(135deg, #4fc3f7, #7c4dff);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.85rem;
+        }
+        /* OBD mockup */
+        .obd-interface { padding: 20px; }
+        .obd-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .obd-status { display: flex; align-items: center; gap: 8px; }
+        .obd-status-dot { width: 8px; height: 8px; border-radius: 50%; background: #81c784; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .obd-codes { margin-bottom: 20px; }
+        .obd-code-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border-left: 3px solid #ff5252;
+        }
+        .obd-code-item.warning { border-left-color: #ffd54f; }
+        .obd-code-label { font-size: 0.85rem; font-weight: 600; color: #4fc3f7; min-width: 60px; }
+        .obd-code-desc { font-size: 0.8rem; color: #b0bec5; }
+        .obd-agent-response {
+            background: rgba(79,195,247,0.05);
+            border: 1px solid rgba(79,195,247,0.15);
+            border-radius: 10px;
+            padding: 16px;
+        }
+        .obd-agent-response h4 { color: #4fc3f7; font-size: 0.9rem; margin-bottom: 8px; }
+        .obd-agent-response p { font-size: 0.8rem; color: #b0bec5; line-height: 1.8; }
+        /* Item info */
+        .item-info { padding: 30px; }
+        .item-info h3 { color: #fff; font-size: 1.3rem; margin-bottom: 12px; }
+        .item-info p { color: #90a4ae; margin-bottom: 16px; line-height: 1.8; }
+        .tech-highlights {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .tech-highlight {
+            padding: 4px 14px;
+            background: rgba(124,77,255,0.1);
+            border: 1px solid rgba(124,77,255,0.2);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #b39ddb;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 30px;
+            color: #4fc3f7;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .back-link:hover { text-decoration: underline; }
+        @media (max-width: 768px) {
+            .dashboard { grid-template-columns: 1fr; }
+            .dash-sidebar { display: none; }
+            .dash-stats { grid-template-columns: 1fr; }
+            h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">&#x2190; 返回首页</a>
+        <h1>作品集 Portfolio</h1>
+        <p class="subtitle">项目成果展示与技术实践记录</p>
+
+        <!-- Portfolio Item 1: One-API Dashboard -->
+        <div class="portfolio-item">
+            <div class="mockup-container">
+                <div class="window-chrome">
+                    <div class="window-titlebar">
+                        <div class="window-dot red"></div>
+                        <div class="window-dot yellow"></div>
+                        <div class="window-dot green"></div>
+                        <span class="window-title">One-API 聚合平台管理界面 - http://localhost:3000</span>
+                    </div>
+                    <div class="window-content">
+                        <div class="dashboard">
+                            <div class="dash-sidebar">
+                                <div class="dash-sidebar-item active">&#x1F4CA; 仪表盘</div>
+                                <div class="dash-sidebar-item">&#x1F511; 渠道管理</div>
+                                <div class="dash-sidebar-item">&#x1F464; 用户管理</div>
+                                <div class="dash-sidebar-item">&#x1F4DD; 日志查询</div>
+                                <div class="dash-sidebar-item">&#x2699; 系统设置</div>
+                                <div class="dash-sidebar-item">&#x1F4B0; 额度管理</div>
+                            </div>
+                            <div class="dash-main">
+                                <div class="dash-header">
+                                    <h3>渠道状态概览</h3>
+                                    <div class="dash-btn">+ 新增渠道</div>
+                                </div>
+                                <div class="dash-stats">
+                                    <div class="dash-stat"><div class="num">12</div><div class="label">活跃渠道</div></div>
+                                    <div class="dash-stat"><div class="num">1.2M</div><div class="label">今日Token</div></div>
+                                    <div class="dash-stat"><div class="num">99.8%</div><div class="label">成功率</div></div>
+                                </div>
+                                <table class="dash-table">
+                                    <tr><th>渠道名称</th><th>模型</th><th>状态</th><th>响应时间</th></tr>
+                                    <tr><td>OpenAI-主力</td><td>gpt-4o</td><td><span class="status-badge online">在线</span></td><td>320ms</td></tr>
+                                    <tr><td>Claude-备用</td><td>claude-3.5</td><td><span class="status-badge online">在线</span></td><td>280ms</td></tr>
+                                    <tr><td>Ollama-本地</td><td>hermes-3</td><td><span class="status-badge online">在线</span></td><td>150ms</td></tr>
+                                    <tr><td>MiniMax-M3</td><td>abab6.5</td><td><span class="status-badge offline">离线</span></td><td>-</td></tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="item-info">
+                <h3>One-API 聚合平台管理界面</h3>
+                <p>基于One-API搭建的企业级多模型聚合网关。统一管理GPT/Claude/本地模型的接入渠道，支持智能路由、负载均衡、故障自动切换。实现了多租户权限隔离与Token用量精确统计。</p>
+                <div class="tech-highlights">
+                    <span class="tech-highlight">One-API</span>
+                    <span class="tech-highlight">Docker Compose</span>
+                    <span class="tech-highlight">PostgreSQL</span>
+                    <span class="tech-highlight">Redis</span>
+                    <span class="tech-highlight">Nginx</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Portfolio Item 2: Ollama Terminal -->
+        <div class="portfolio-item">
+            <div class="mockup-container">
+                <div class="window-chrome">
+                    <div class="window-titlebar">
+                        <div class="window-dot red"></div>
+                        <div class="window-dot yellow"></div>
+                        <div class="window-dot green"></div>
+                        <span class="window-title">Terminal - ollama serve</span>
+                    </div>
+                    <div class="window-content" style="background:#0d1117;">
+                        <div class="terminal-content">
+                            <p><span class="prompt">$ </span>ollama pull hermes3:8b-q4_K_M</p>
+                            <p class="output">pulling manifest...</p>
+                            <p class="output">pulling 8ffd456af5f8... 100% |████████████████████| 4.9 GB</p>
+                            <p class="output">pulling a]948f72de7... 100% |████████████████████| 487 B</p>
+                            <p class="success">success</p>
+                            <br>
+                            <p><span class="prompt">$ </span>ollama run hermes3:8b-q4_K_M</p>
+                            <p class="info">>>> 加载模型中... (VRAM: 5.2GB / 8GB)</p>
+                            <p class="success">模型加载完成，推理速度: 42 tokens/s</p>
+                            <br>
+                            <p><span class="prompt">$ </span>curl http://localhost:11434/api/generate -d '{</p>
+                            <p class="output">&nbsp;&nbsp;"model": "hermes3:8b-q4_K_M",</p>
+                            <p class="output">&nbsp;&nbsp;"prompt": "分析故障码P0171的可能原因"</p>
+                            <p class="output">}'</p>
+                            <br>
+                            <p class="success">{"response": "P0171表示系统过稀(Bank 1)，常见原因包括：\n1. 进气系统漏气\n2. MAF传感器脏污\n3. 燃油压力不足\n4. 氧传感器故障..."}</p>
+                            <br>
+                            <p><span class="prompt">$ </span><span style="animation:blink 1s infinite;">_</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="item-info">
+                <h3>Ollama 本地模型部署终端</h3>
+                <p>使用Ollama完成Hermes-3模型的本地化量化部署。采用Q4_K_M量化方案在8GB显存下实现42 tokens/s的推理速度。通过REST API集成到车载诊断系统中，实现离线环境下的故障智能分析。</p>
+                <div class="tech-highlights">
+                    <span class="tech-highlight">Ollama</span>
+                    <span class="tech-highlight">GGUF量化</span>
+                    <span class="tech-highlight">Hermes-3</span>
+                    <span class="tech-highlight">REST API</span>
+                    <span class="tech-highlight">Q4_K_M</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Portfolio Item 3: Hermes Agent Chat -->
+        <div class="portfolio-item">
+            <div class="mockup-container">
+                <div class="window-chrome">
+                    <div class="window-titlebar">
+                        <div class="window-dot red"></div>
+                        <div class="window-dot yellow"></div>
+                        <div class="window-dot green"></div>
+                        <span class="window-title">Hermes Agent - 智能对话演示</span>
+                    </div>
+                    <div class="window-content" style="padding:0;">
+                        <div class="chat-interface">
+                            <div class="chat-messages">
+                                <div class="chat-msg user">
+                                    <div class="chat-avatar human">&#x1F464;</div>
+                                    <div class="chat-bubble">帮我查一下P0300故障码是什么意思？有什么维修建议？</div>
+                                </div>
+                                <div class="chat-msg bot">
+                                    <div class="chat-avatar ai">AI</div>
+                                    <div class="chat-bubble">
+                                        &#x1F50D; 正在调用工具: <code>lookup_obd_code("P0300")</code><br><br>
+                                        <strong>P0300 - 检测到随机/多缸失火</strong><br><br>
+                                        &#x26A0; 严重程度: 高<br>
+                                        &#x1F527; 维修建议:<br>
+                                        1. 检查火花塞磨损情况（建议6万公里更换）<br>
+                                        2. 检测点火线圈电阻值<br>
+                                        3. 检查燃油喷射器雾化质量<br>
+                                        4. 测量气缸压缩压力<br><br>
+                                        是否需要我进一步查询相关维修手册？
+                                    </div>
+                                </div>
+                                <div class="chat-msg user">
+                                    <div class="chat-avatar human">&#x1F464;</div>
+                                    <div class="chat-bubble">查一下火花塞更换的标准工时和配件价格</div>
+                                </div>
+                            </div>
+                            <div class="chat-input-area">
+                                <div class="chat-input">输入您的问题...</div>
+                                <div class="chat-send">发送</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="item-info">
+                <h3>Hermes Agent 对话演示</h3>
+                <p>基于Hermes-3模型实现的智能对话Agent，集成Function Calling能力。支持OBD故障码查询、维修手册检索、工时费用估算等工具调用。Agent可理解口语化的故障描述并自动调用合适的工具链。</p>
+                <div class="tech-highlights">
+                    <span class="tech-highlight">Hermes-3</span>
+                    <span class="tech-highlight">Function Calling</span>
+                    <span class="tech-highlight">Tool Use</span>
+                    <span class="tech-highlight">多轮对话</span>
+                    <span class="tech-highlight">RAG</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Portfolio Item 4: OBD Agent -->
+        <div class="portfolio-item">
+            <div class="mockup-container">
+                <div class="window-chrome">
+                    <div class="window-titlebar">
+                        <div class="window-dot red"></div>
+                        <div class="window-dot yellow"></div>
+                        <div class="window-dot green"></div>
+                        <span class="window-title">车载OBD故障诊断Agent - 实时监控</span>
+                    </div>
+                    <div class="window-content" style="padding:0;">
+                        <div class="obd-interface">
+                            <div class="obd-header">
+                                <div class="obd-status">
+                                    <div class="obd-status-dot"></div>
+                                    <span style="color:#81c784;font-size:0.85rem;">OBD-II 已连接</span>
+                                </div>
+                                <span style="color:#90a4ae;font-size:0.8rem;">VIN: LFV2A21K5G4XXXXX</span>
+                            </div>
+                            <div class="obd-codes">
+                                <div class="obd-code-item">
+                                    <span class="obd-code-label">P0171</span>
+                                    <span class="obd-code-desc">系统过稀 (Bank 1) - 进气系统可能存在漏气</span>
+                                </div>
+                                <div class="obd-code-item warning">
+                                    <span class="obd-code-label">P0420</span>
+                                    <span class="obd-code-desc">催化转化器效率低于阈值 (Bank 1)</span>
+                                </div>
+                                <div class="obd-code-item warning">
+                                    <span class="obd-code-label">P0128</span>
+                                    <span class="obd-code-desc">冷却液恒温器温度低于调节温度</span>
+                                </div>
+                            </div>
+                            <div class="obd-agent-response">
+                                <h4>&#x1F916; Agent 综合诊断分析</h4>
+                                <p>
+                                    综合分析3个故障码的关联性：P0171（过稀）与P0420（催化器效率低）存在因果关联。长期混合气过稀会导致催化器过热损坏。P0128（水温低）可能指向节温器卡开，导致发动机始终处于暖机状态，ECU持续加浓，但MAF读数偏低导致系统最终报过稀。<br><br>
+                                    <strong>建议维修顺序：</strong>1.检查节温器 → 2.检测MAF传感器 → 3.确认进气管路密封 → 4.评估催化器状态
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="item-info">
+                <h3>车载OBD故障诊断Agent交互界面</h3>
+                <p>实时连接车辆OBD-II接口，读取故障码并通过Agent进行智能关联分析。不仅翻译单个故障码含义，更通过多码联合推理找出根本原因，提供有优先级的维修建议，大幅减少维修试错成本。</p>
+                <div class="tech-highlights">
+                    <span class="tech-highlight">OBD-II协议</span>
+                    <span class="tech-highlight">实时监控</span>
+                    <span class="tech-highlight">多码关联分析</span>
+                    <span class="tech-highlight">故障推理</span>
+                    <span class="tech-highlight">CAN总线</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>@keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }</style>
+</body>
+</html>

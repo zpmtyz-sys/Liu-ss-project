@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>刘思思 - 学习计划</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+            background: #0f0f23;
+            color: #e0e0e0;
+            line-height: 1.8;
+        }
+        .container { max-width: 900px; margin: 0 auto; padding: 60px 20px; }
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #4fc3f7, #7c4dff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+        }
+        .subtitle { text-align: center; color: #90a4ae; margin-bottom: 60px; font-size: 1.05rem; }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 30px;
+            color: #4fc3f7;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .back-link:hover { text-decoration: underline; }
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 50px;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, #4fc3f7, #7c4dff, #4fc3f7);
+        }
+        .phase {
+            position: relative;
+            margin-bottom: 50px;
+            animation: fadeIn 0.6s ease backwards;
+        }
+        .phase:nth-child(1) { animation-delay: 0.1s; }
+        .phase:nth-child(2) { animation-delay: 0.2s; }
+        .phase:nth-child(3) { animation-delay: 0.3s; }
+        .phase:nth-child(4) { animation-delay: 0.4s; }
+        .phase:nth-child(5) { animation-delay: 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .phase-dot {
+            position: absolute;
+            left: -38px;
+            top: 6px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #0f0f23;
+            border: 3px solid #4fc3f7;
+            z-index: 1;
+        }
+        .phase:nth-child(even) .phase-dot { border-color: #7c4dff; }
+        .phase-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 30px;
+            transition: border-color 0.3s;
+        }
+        .phase-card:hover { border-color: rgba(79,195,247,0.3); }
+        .phase-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .phase-title {
+            font-size: 1.3rem;
+            color: #fff;
+            font-weight: 600;
+        }
+        .phase-time {
+            padding: 4px 14px;
+            background: rgba(79,195,247,0.1);
+            border: 1px solid rgba(79,195,247,0.2);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #4fc3f7;
+        }
+        .phase-subtitle {
+            color: #7c4dff;
+            font-size: 1rem;
+            margin-bottom: 16px;
+        }
+        .phase-goals { margin-bottom: 16px; }
+        .phase-goals h4 {
+            color: #90a4ae;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .goal-list {
+            list-style: none;
+            padding: 0;
+        }
+        .goal-list li {
+            padding: 6px 0;
+            color: #b0bec5;
+            font-size: 0.9rem;
+            position: relative;
+            padding-left: 20px;
+        }
+        .goal-list li::before {
+            content: '&#x25B8;';
+            position: absolute;
+            left: 0;
+            color: #4fc3f7;
+        }
+        .phase-resources {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .resource-tag {
+            padding: 3px 10px;
+            background: rgba(124,77,255,0.08);
+            border: 1px solid rgba(124,77,255,0.15);
+            border-radius: 14px;
+            font-size: 0.75rem;
+            color: #b39ddb;
+        }
+        .milestones {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        .milestones h4 {
+            color: #81c784;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+        }
+        .milestone-item {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(76,175,80,0.08);
+            border: 1px solid rgba(76,175,80,0.15);
+            border-radius: 14px;
+            font-size: 0.8rem;
+            color: #81c784;
+            margin: 4px 4px 4px 0;
+        }
+        @media (max-width: 768px) {
+            .container { padding: 40px 16px; }
+            h1 { font-size: 1.8rem; }
+            .timeline { padding-left: 36px; }
+            .timeline::before { left: 12px; }
+            .phase-dot { left: -30px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">&#x2190; 返回首页</a>
+        <h1>12个月学习计划</h1>
+        <p class="subtitle">从基础巩固到求职冲刺的系统化成长路径</p>
+
+        <div class="timeline">
+            <!-- Phase 1 -->
+            <div class="phase">
+                <div class="phase-dot"></div>
+                <div class="phase-card">
+                    <div class="phase-header">
+                        <span class="phase-title">Phase 1: 基础巩固</span>
+                        <span class="phase-time">Month 1-2</span>
+                    </div>
+                    <p class="phase-subtitle">夯实工程化基础能力</p>
+                    <div class="phase-goals">
+                        <h4>&#x1F3AF; 核心目标</h4>
+                        <ul class="goal-list">
+                            <li>Python进阶：异步编程、装饰器、类型注解、项目规范化</li>
+                            <li>Linux系统管理：Shell脚本、进程管理、网络配置、日志分析</li>
+                            <li>Docker容器化：Dockerfile编写、Compose编排、镜像优化</li>
+                            <li>Git工作流：分支策略、代码审查、CI/CD基础</li>
+                        </ul>
+                    </div>
+                    <div class="phase-resources">
+                        <span class="resource-tag">Python Cookbook</span>
+                        <span class="resource-tag">Docker官方文档</span>
+                        <span class="resource-tag">鸟哥Linux私房菜</span>
+                        <span class="resource-tag">GitHub实战项目</span>
+                    </div>
+                    <div class="milestones">
+                        <h4>&#x2705; 里程碑</h4>
+                        <span class="milestone-item">完成3个CLI工具项目</span>
+                        <span class="milestone-item">Docker部署个人博客</span>
+                        <span class="milestone-item">Linux服务器独立运维</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phase 2 -->
+            <div class="phase">
+                <div class="phase-dot"></div>
+                <div class="phase-card">
+                    <div class="phase-header">
+                        <span class="phase-title">Phase 2: 大模型部署实战</span>
+                        <span class="phase-time">Month 3-4</span>
+                    </div>
+                    <p class="phase-subtitle">掌握LLM生产级部署全流程</p>
+                    <div class="phase-goals">
+                        <h4>&#x1F3AF; 核心目标</h4>
+                        <ul class="goal-list">
+                            <li>Ollama部署：模型拉取、自定义Modelfile、API集成、性能调优</li>
+                            <li>vLLM高性能推理：PagedAttention原理、连续批处理、多GPU并行</li>
+                            <li>模型量化：GGUF/AWQ/GPTQ对比、量化精度与速度权衡</li>
+                            <li>One-API网关：多渠道配置、路由策略、限流与监控</li>
+                        </ul>
+                    </div>
+                    <div class="phase-resources">
+                        <span class="resource-tag">Ollama官方文档</span>
+                        <span class="resource-tag">vLLM源码</span>
+                        <span class="resource-tag">llama.cpp项目</span>
+                        <span class="resource-tag">One-API文档</span>
+                    </div>
+                    <div class="milestones">
+                        <h4>&#x2705; 里程碑</h4>
+                        <span class="milestone-item">本地部署3+开源模型</span>
+                        <span class="milestone-item">搭建One-API网关</span>
+                        <span class="milestone-item">输出量化对比报告</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phase 3 -->
+            <div class="phase">
+                <div class="phase-dot"></div>
+                <div class="phase-card">
+                    <div class="phase-header">
+                        <span class="phase-title">Phase 3: Agent开发</span>
+                        <span class="phase-time">Month 5-6</span>
+                    </div>
+                    <p class="phase-subtitle">深入Agent架构与RAG系统</p>
+                    <div class="phase-goals">
+                        <h4>&#x1F3AF; 核心目标</h4>
+                        <ul class="goal-list">
+                            <li>Hermes Agent：tool_call协议、系统提示设计、状态管理</li>
+                            <li>Function Calling：工具定义规范、参数解析、错误处理</li>
+                            <li>RAG系统：文本分块、向量嵌入、相似度检索、重排序</li>
+                            <li>向量数据库：Milvus/Chroma部署与调优、索引策略</li>
+                        </ul>
+                    </div>
+                    <div class="phase-resources">
+                        <span class="resource-tag">Claude Code源码</span>
+                        <span class="resource-tag">LangChain文档</span>
+                        <span class="resource-tag">Milvus官方教程</span>
+                        <span class="resource-tag">RAG论文集</span>
+                    </div>
+                    <div class="milestones">
+                        <h4>&#x2705; 里程碑</h4>
+                        <span class="milestone-item">实现完整Agent项目</span>
+                        <span class="milestone-item">搭建企业RAG系统</span>
+                        <span class="milestone-item">阅读Claude Code源码</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phase 4 -->
+            <div class="phase">
+                <div class="phase-dot"></div>
+                <div class="phase-card">
+                    <div class="phase-header">
+                        <span class="phase-title">Phase 4: 车机大模型专项</span>
+                        <span class="phase-time">Month 7-9</span>
+                    </div>
+                    <p class="phase-subtitle">打造差异化核心竞争力</p>
+                    <div class="phase-goals">
+                        <h4>&#x1F3AF; 核心目标</h4>
+                        <ul class="goal-list">
+                            <li>车载边缘计算：嵌入式推理优化、模型剪枝、INT4/INT8量化</li>
+                            <li>智能座舱系统：车机HMI交互、多模态输入、场景感知</li>
+                            <li>TTS/ASR集成：语音识别+大模型+语音合成全链路</li>
+                            <li>OBD诊断Agent：故障码关联分析、维修知识图谱、预测性维护</li>
+                        </ul>
+                    </div>
+                    <div class="phase-resources">
+                        <span class="resource-tag">NVIDIA Jetson开发</span>
+                        <span class="resource-tag">CAN协议文档</span>
+                        <span class="resource-tag">Whisper/TTS模型</span>
+                        <span class="resource-tag">OBD-II标准</span>
+                    </div>
+                    <div class="milestones">
+                        <h4>&#x2705; 里程碑</h4>
+                        <span class="milestone-item">车载Agent Demo</span>
+                        <span class="milestone-item">语音交互原型</span>
+                        <span class="milestone-item">技术博客10篇</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phase 5 -->
+            <div class="phase">
+                <div class="phase-dot"></div>
+                <div class="phase-card">
+                    <div class="phase-header">
+                        <span class="phase-title">Phase 5: 求职冲刺</span>
+                        <span class="phase-time">Month 10-12</span>
+                    </div>
+                    <p class="phase-subtitle">项目打磨与面试突击</p>
+                    <div class="phase-goals">
+                        <h4>&#x1F3AF; 核心目标</h4>
+                        <ul class="goal-list">
+                            <li>项目打磨：完善GitHub项目文档、录制Demo视频、整理作品集</li>
+                            <li>面试准备：LLM原理、部署方案、Agent架构、系统设计题</li>
+                            <li>简历优化：针对赛豆科技等目标公司定制简历与求职信</li>
+                            <li>投递策略：LLM部署岗/Agent开发岗/车载AI岗批量投递</li>
+                        </ul>
+                    </div>
+                    <div class="phase-resources">
+                        <span class="resource-tag">LeetCode算法</span>
+                        <span class="resource-tag">系统设计面试</span>
+                        <span class="resource-tag">目标公司调研</span>
+                        <span class="resource-tag">模拟面试</span>
+                    </div>
+                    <div class="milestones">
+                        <h4>&#x2705; 里程碑</h4>
+                        <span class="milestone-item">GitHub Star 100+</span>
+                        <span class="milestone-item">获得3+面试机会</span>
+                        <span class="milestone-item">拿到心仪Offer</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

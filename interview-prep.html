@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>刘思思 - 面试资料</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+            background: #0f0f23;
+            color: #e0e0e0;
+            line-height: 1.8;
+        }
+        .container { max-width: 900px; margin: 0 auto; padding: 60px 20px; }
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #4fc3f7, #7c4dff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+        }
+        .subtitle { text-align: center; color: #90a4ae; margin-bottom: 60px; }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 30px;
+            color: #4fc3f7;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .back-link:hover { text-decoration: underline; }
+        /* Accordion */
+        .topic-section { margin-bottom: 24px; }
+        .topic-header {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 20px 24px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        .topic-header:hover { border-color: rgba(79,195,247,0.3); background: rgba(255,255,255,0.05); }
+        .topic-header h3 { color: #fff; font-size: 1.1rem; }
+        .topic-arrow {
+            color: #4fc3f7;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+        .topic-toggle { display: none; }
+        .topic-toggle:checked ~ .topic-content { max-height: 2000px; opacity: 1; padding: 24px; }
+        .topic-toggle:checked ~ .topic-header .topic-arrow { transform: rotate(180deg); }
+        .topic-content {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            padding: 0 24px;
+            background: rgba(255,255,255,0.01);
+            border: 1px solid rgba(255,255,255,0.04);
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+        }
+        .qa-item { margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .qa-item:last-child { border-bottom: none; margin-bottom: 0; }
+        .qa-item .question {
+            color: #4fc3f7;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+        .qa-item .question::before { content: 'Q: '; color: #7c4dff; }
+        .qa-item .answer { color: #b0bec5; font-size: 0.9rem; line-height: 2; }
+        .qa-item .answer strong { color: #e0e0e0; }
+        code {
+            background: rgba(79,195,247,0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: #4fc3f7;
+        }
+        @media (max-width: 768px) {
+            .container { padding: 40px 16px; }
+            h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">&#x2190; 返回首页</a>
+        <h1>面试资料库</h1>
+        <p class="subtitle">大模型领域核心面试题与详细解答</p>
+
+        <!-- Topic 1: LLM Basics -->
+        <div class="topic-section">
+            <input type="checkbox" class="topic-toggle" id="t1">
+            <label class="topic-header" for="t1">
+                <h3>&#x1F4D6; 大模型基础概念</h3>
+                <span class="topic-arrow">&#x25BC;</span>
+            </label>
+            <div class="topic-content">
+                <div class="qa-item">
+                    <p class="question">请解释Transformer架构的核心组件</p>
+                    <p class="answer">Transformer由<strong>Encoder-Decoder</strong>结构组成，核心是<strong>Self-Attention机制</strong>。关键组件包括：Multi-Head Attention（多头注意力，并行计算多组Q/K/V）、Feed-Forward Network（前馈网络，两层线性变换+激活函数）、Layer Normalization（层归一化）、Positional Encoding（位置编码，注入序列位置信息）。GPT系列只使用Decoder部分（带Causal Mask的自注意力），BERT使用Encoder部分（双向注意力）。</p>
+                </div>
+                <div class="qa-item">
+                    <p class="question">Attention机制的计算公式是什么？为什么要除以根号dk？</p>
+                    <p class="answer">Attention(Q,K,V) = softmax(QK^T / sqrt(d_k)) * V。除以<code>sqrt(d_k)</code>是为了<strong>缩放点积</strong>，防止当维度d_k较大时，点积结果过大导致softmax进入梯度消失区域。这被称为Scaled Dot-Product Attention，是训练稳定性的关键。</p>
+                </div>
+                <div class="qa-item">
+                    <p class="question">Tokenization有哪些常见方案？各有什么优缺点？</p>
+                    <p class="answer"><strong>BPE（Byte Pair Encoding）</strong>：GPT系列使用，基于频率合并子词，平衡词表大小和覆盖率。<strong>WordPiece</strong>：BERT使用，类似BPE但基于似然。<strong>SentencePiece</strong>：与语言无关的分词，支持中文等无空格语言。<strong>Byte-level BPE</strong>：以字节为基本单位，避免OOV问题但序列更长。中文场景下SentencePiece表现较好。</p>
+                </div>
+                <div class="qa-item">
+                    <p class="question">RLHF的训练流程是什么？</p>
+                    <p class="answer">RLHF（Reinforcement Learning from Human Feedback）分三步：<strong>1.SFT阶段</strong>：用高质量对话数据微调基础模型。<strong>2.奖励模型训练</strong>：人工标注偏好数据（选择更好的回答），训练Reward Model。<strong>3.PPO优化</strong>：用Reward Model作为奖励信号，通过PPO算法优化策略模型，同时加KL散度约束防止偏离太远。DPO（Direct Preference Optimization）是近期替代方案，直接从偏好数据优化，省去训练奖励模型的步骤。</p>
+                </div>
+                <div class="qa-item">
+                    <p class="question">LLM的涌现能力(Emergent Abilities)指什么？</p>
+                    <p class="answer">涌现能力指模型在<strong>规模超过某个阈值后突然展现</strong>的能力，小模型几乎完全不具备。典型例子包括：链式推理（Chain-of-Thought）、少样本学习（Few-shot Learning）、代码生成、多步数学推理。这些能力不是渐进提升的，而是在参数量达到一定量级（如百亿级）后突然出现，是支持"Scaling Law"的重要证据。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Topic 2: Deployment -->
+        <div class="topic-section">
+            <input type="checkbox" class="topic-toggle" id="t2">
+            <label class="topic-header" for="t2">
+                <h3>&#x2699; 模型部署与量化</h3>
+                <span class="topic-arrow">&#x25BC;</span>
+            </label>
+            <div class="topic-content">
+                <div class="qa-item">
+                    <p class="question">GGUF vs AWQ vs GPTQ各有什么特点？</p>
+                    <p class="answer"><strong>GGUF</strong>：llama.cpp格式，支持CPU+GPU混合推理，适合消费级硬件，灵活的量化级别(Q2-Q8)。<strong>AWQ（Activation-aware Weight Quantization）</strong>：基于激活值分布的权重量化，保护重要通道，精度损失小，4bit即可接近FP16效果。<strong>GPTQ</strong>：基于近似二阶信息的逐层量化，速度快，适合GPU推理，但对校准数据敏感。选择建议：CPU/边缘设备用GGUF，GPU高性能部署用AWQ或GPTQ。</p>
+                </div>
+                <div class="qa-item">
+                    <p class="question">vLLM相比Ollama有什么优势？各自适用场景？</p>
+                    <p class="answer"><strong>vLLM</strong>：专注高性能推理服务，核心是PagedAttention（类似虚拟内存管理KV Cache），支持连续批处理、张量并行。适合<strong>生产环境多用户并发</strong>。<strong>Ollama</strong>：侧重易用性和本地部署，一键拉取运行模型，带简单API。适合<strong>开发测试和单用户场景</strong>。生产环境50+并发选vLLM，本地开发和演示选Ollama。</p>
+                </div>
+                <div class="qa-item">
+                    <p class="question">什么是KV Cache？为什么对推理性能至关重要？</p>
+                    <p class="answer">KV Cache缓存<strong>已生成token的Key和Value矩阵</strong>，避免每次生成新token时重新计算所有历史token的注意力。没有KV Cache，生成N个token的复杂度是O(N^3)；有KV Cache则降为O(N^2)。<strong>显存占用</strong>：KV Cache随序列长度线性增长，是长文本推理的主要瓶颈。vLLM的PagedAttention通过将KV Cache分页管理，减少内存碎片，提升并发量。</p>
+                </div>
+                <div class="qa-item">
+                    <p class="question">如何评估量化后模型的质量损失？</p>
+                    <p class="answer">评估方法：<strong>1.困惑度(Perplexity)</strong>：在标准测试集上对比量化前后PPL变化，一般PPL增加5%以内可接受。<strong>2.任务基准测试</strong>：用MMLU/HumanEval等基准对比。<strong>3.人工盲评</strong>：让评估者在不知道哪个是量化版的情况下对比回答质量。<strong>4.具体场景测试</strong>：在实际业务场景中A/B测试。Q4_K_M通常是性价比最优的量化级别。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Topic 3: Agent -->
+        <div class="topic-section">
+            <input type="checkbox" class="topic-toggle" id="t3">
+            <label class="topic-header" for="t3">
+                <h3>&#x1F916; Agent框架</h3>
+                <span class="topic-arrow">&#x25BC;</span>
+            </label>
+            <div class="topic-content">
+                <div class="qa-item">
+                    <p class="question">Function Calling的完整工作流程是什么？</p>
+                    <p class="answer"><strong>1.定义工具</strong>：声明函数名、描述、参数schema（JSON Schema格式）。<strong>2.用户提问</strong>：将用户消息+工具列表发送给LLM。<strong>3.模型决策</strong>：LLM判断是否需要调用工具，输出tool_call（函数名+参数JSON）。<strong>4.执行工具</strong>：应用层解析tool_call，执行对应函数获取结果。<strong>5.结果回传</strong>：将工具执行结果以tool_response角色发回LLM。<strong>6.生成回答</strong>：LLM综合工具结果生成最终回复。可能多轮调用。</p>
+                </div>
+                <div class="qa-item">
+                    <p class="question">ReAct框架的核心思想是什么？</p>
+                    <p class="answer">ReAct = <strong>Reasoning + Acting</strong>。核心是让LLM交替进行"思考"和"行动"：<strong>Thought</strong>（推理当前情况，决定下一步）-> <strong>Action</strong>（调用工具或执行操作）-> <strong>Observation</strong>（观察结果）-> 循环直到得出最终答案。相比纯推理(CoT)，ReAct能利用外部工具获取信息；相比纯行动，ReAct有推理指导行动方向。Hermes-3原生支持这种tool_call模式。</p>
+                </div>
+                <div class="qa-item">
+                    <p class="question">Agent的状态管理有哪些挑战？如何解决？</p>
+                    <p class="answer">主要挑战：<strong>1.上下文窗口有限</strong>：对话历史超过上下文长度。解决：滑动窗口+摘要压缩。<strong>2.多轮工具调用状态</strong>：跟踪已执行/待执行的工具链。解决：维护结构化状态对象。<strong>3.错误恢复</strong>：工具调用失败后的重试与回退。解决：实现retry机制和fallback策略。<strong>4.并发安全</strong>：多用户共享Agent实例。解决：会话隔离，每个会话独立状态。Claude Code的源码中有优秀的状态管理参考实现。</p>
+                </div>
+                <div class="qa-item">
+                    <p class="question">如何设计一个可靠的Tool Use系统？</p>
+                    <p class="answer"><strong>1.工具描述要精确</strong>：清晰的function description帮助LLM正确选择工具。<strong>2.参数校验</strong>：对LLM输出的参数做schema validation，防止类型错误。<strong>3.超时控制</strong>：每个工具设置执行超时，避免阻塞Agent循环。<strong>4.结果格式化</strong>：工具返回结构化结果，方便LLM理解。<strong>5.错误信息</strong>：工具失败时返回有意义的错误描述，让LLM能自我修正。<strong>6.权限控制</strong>：敏感操作需要确认机制。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Topic 4: Prompt Engineering -->
+        <div class="topic-section">
+            <input type="checkbox" class="topic-toggle" id="t4">
+            <label class="topic-header" for="t4">
+                <h3>&#x1F4AC; Prompt Engineering</h3>
+                <span class="topic-arrow">&#x25BC;</span>
+            </label>
+            <div class="topic-content">
+                <div class="qa-item">
+                    <p class="question">Few-shot Prompting的最佳实践是什么？</p>
+                    <p class="answer"><strong>1.示例选择</strong>：选择与目标任务最相似的示例，覆盖主要类型。<strong>2.示例数量</strong>：通常3-5个即可，过多可能占用上下文且引入噪声。<strong>3.格式一致</strong>：所有示例保持相同的输入输出格式。<strong>4.难度递进</strong>：从简单到复杂排列示例。<strong>5.包含边界情况</strong>：加入易错案例帮助模型理解边界。实测发现示例质量比数量更重要。</p>
+                </div>
+                <div class="qa-item">
+                    <p class="question">Chain-of-Thought(CoT)提示为什么有效？</p>
+                    <p class="answer">CoT通过要求模型<strong>逐步展示推理过程</strong>来提升复杂任务表现。有效原因：<strong>1.分解问题</strong>：将复杂问题拆解为小步骤，降低单步难度。<strong>2.减少跳跃</strong>：避免模型"抄近路"直接猜答案。<strong>3.错误定位</strong>：可以看到推理链中哪步出错。使用技巧：加"Let's think step by step"即为Zero-shot CoT；提供带推理过程的示例则为Few-shot CoT。对数学、逻辑推理任务效果显著。</p>
+                </div>
+                <div class="qa-item">
+                    <p class="question">System Prompt设计有哪些关键原则？</p>
+                    <p class="answer"><strong>1.角色定义</strong>：明确AI的身份和专业领域。<strong>2.行为约束</strong>：规定什么该做什么不该做。<strong>3.输出格式</strong>：指定回答的结构和格式要求。<strong>4.知识边界</strong>：声明不确定时应如何处理。<strong>5.示例引导</strong>：在System Prompt中放入参考示例。<strong>6.优先级声明</strong>：当多个指令冲突时的优先级。好的System Prompt应该简洁但完整，避免歧义，用结构化格式组织。</p>
+                </div>
+                <div class="qa-item">
+                    <p class="question">如何评估和迭代Prompt的效果？</p>
+                    <p class="answer"><strong>1.建立评测集</strong>：收集50-100个代表性输入和期望输出。<strong>2.定义指标</strong>：准确率、格式合规率、关键信息召回率等。<strong>3.A/B对比</strong>：每次只修改一个变量，对比效果变化。<strong>4.失败案例分析</strong>：重点关注Bad Case，找出Prompt的薄弱环节。<strong>5.版本管理</strong>：对Prompt做版本控制，记录每次修改的原因和效果。<strong>6.鲁棒性测试</strong>：用不同表述方式测试同一意图，确保Prompt稳定。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Topic 5: Car AI -->
+        <div class="topic-section">
+            <input type="checkbox" class="topic-toggle" id="t5">
+            <label class="topic-header" for="t5">
+                <h3>&#x1F697; 车载AI场景</h3>
+                <span class="topic-arrow">&#x25BC;</span>
+            </label>
+            <div class="topic-content">
+                <div class="qa-item">
+                    <p class="question">车载场景部署LLM有哪些特殊约束？</p>
+                    <p class="answer"><strong>1.算力有限</strong>：车机芯片(如高通8295)算力远低于数据中心GPU，需要极致量化(INT4/INT8)。<strong>2.实时性要求</strong>：语音交互要求首token延迟<500ms，否则用户体验差。<strong>3.功耗限制</strong>：电动车对功耗敏感，LLM推理功耗需严格控制。<strong>4.温度范围</strong>：-40~85度工作温度，芯片降频影响推理速度。<strong>5.网络不稳定</strong>：行驶中网络断续，需本地模型兜底。<strong>6.车规安全</strong>：ISO 26262功能安全标准，AI输出不能直接控制关键系统。</p>
+                </div>
+                <div class="qa-item">
+                    <p class="question">如何在车载边缘设备上优化LLM推理？</p>
+                    <p class="answer"><strong>1.模型选择</strong>：选用1-3B小模型(如Phi-3-mini/Qwen2-1.5B)，平衡能力与资源。<strong>2.极致量化</strong>：INT4量化+KV Cache量化，压缩到1-2GB内存占用。<strong>3.模型剪枝</strong>：针对车载场景裁剪不需要的能力。<strong>4.推理优化</strong>：使用TensorRT/ONNX Runtime加速，利用NPU。<strong>5.投机解码</strong>：小模型草稿+大模型验证，提升生成速度。<strong>6.场景分级</strong>：简单意图用规则引擎，复杂对话用LLM。</p>
+                </div>
+                <div class="qa-item">
+                    <p class="question">车规级安全标准对AI系统有什么要求？</p>
+                    <p class="answer">ISO 26262要求：<strong>1.确定性</strong>：相同输入应产生可预测的输出，LLM的随机性需要额外安全层。<strong>2.故障检测</strong>：AI系统输出异常时需快速检测并切换到安全状态。<strong>3.冗余设计</strong>：关键功能不能仅依赖AI，需要传统算法兜底。<strong>4.测试覆盖</strong>：需要大量Corner Case测试证明安全性。<strong>5.OTA更新安全</strong>：模型更新需要完整的验证流程。实际实践中，AI辅助建议可接受，AI直接控制需要ASIL-B以上等级认证。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Topic 6: Behavioral -->
+        <div class="topic-section">
+            <input type="checkbox" class="topic-toggle" id="t6">
+            <label class="topic-header" for="t6">
+                <h3>&#x1F3AF; 行为面试题</h3>
+                <span class="topic-arrow">&#x25BC;</span>
+            </label>
+            <div class="topic-content">
+                <div class="qa-item">
+                    <p class="question">作为非科班出身，你的跨界优势是什么？</p>
+                    <p class="answer">我的跨界优势体现在三个层面：<strong>1.领域知识壁垒</strong>：懂CAN总线、OBD协议、发动机电控系统，这些知识对纯CS背景的人来说是需要长期积累的。当AI落地到汽车场景时，我能精准定义需求和评估效果。<strong>2.实践导向思维</strong>：汽修训练了我"先诊断后维修"的系统排查思维，这和Agent的ReAct模式高度一致。<strong>3.稀缺性</strong>：在LLM+汽车的交叉领域，同时具备两方面知识的人极少，这就是我的不可替代性。</p>
+                </div>
+                <div class="qa-item">
+                    <p class="question">如何证明你的学习能力？</p>
+                    <p class="answer"><strong>转型本身就是最好的证明。</strong>从汽修到AI大模型，跨越的不仅是技术栈，更是思维方式。具体证据：1.自学完成LLM私有化部署，从Docker基础到One-API网关搭建全部独立完成。2.阅读Claude Code源码理解生产级Agent架构，没有人教，纯靠文档和源码。3.持续跟进前沿：每个新模型发布后48小时内完成评测部署。4.通过项目学习而非课程学习，每项技能都有对应的实战项目产出。</p>
+                </div>
+                <div class="qa-item">
+                    <p class="question">遇到技术难题时你如何解决？举一个例子。</p>
+                    <p class="answer">以部署Hermes-3模型遇到显存不足为例：<strong>问题发现</strong>：8B模型FP16需要16GB显存，我的显卡只有8GB。<strong>分析过程</strong>：1.对比各量化方案的显存占用和精度损失数据。2.阅读llama.cpp和Ollama源码理解量化实现。3.在社区找到GGUF Q4_K_M的实测数据。<strong>解决方案</strong>：采用Q4_K_M量化(4.9GB)，通过benchmark验证推理质量仅下降3%。<strong>额外收获</strong>：整理了量化方案对比文档，后续直接复用。<strong>方法论</strong>：明确约束 -> 穷举方案 -> 数据验证 -> 记录沉淀。</p>
+                </div>
+                <div class="qa-item">
+                    <p class="question">你为什么想加入赛豆科技这样的AI公司？</p>
+                    <p class="answer"><strong>1.技术方向匹配</strong>：赛豆科技专注LLM应用落地，这正是我的技能方向和热情所在。<strong>2.成长空间</strong>：初创/成长期的AI公司能让我接触全栈，从部署到产品都能参与。<strong>3.价值创造</strong>：我的汽修+AI跨界背景能为公司在车载AI垂直场景中带来独特价值。<strong>4.学习环境</strong>：和一群AI领域的工程师共事，能加速我的成长。我不是来"学习"的，而是带着实战能力来创造价值的。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

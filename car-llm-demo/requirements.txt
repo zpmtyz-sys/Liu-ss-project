@@ -1,0 +1,11 @@
+# 车载智能维保Agent依赖
+# Python >= 3.10
+
+# HTTP客户端 - 用于调用Ollama API
+requests>=2.31.0
+
+# 配置文件解析
+pyyaml>=6.0.1
+
+# 类型检查支持（开发时）
+typing-extensions>=4.8.0
